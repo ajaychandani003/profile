@@ -1,0 +1,223 @@
+/* ==========================================================================
+   AJAY CHANDANI — DEEP SPACE EDITORIAL DESIGN SYSTEM
+   Inspired by: https://aahana-surya.github.io/
+   ========================================================================== */
+
+:root {
+  /* Inks: Neutral whites and greys */
+  --ink-00: #ffffff;
+  --ink-10: #eef1f6;
+  --ink-40: #a7afbd;
+  --ink-60: #848e9f;
+  --ink-80: #4a5464;
+
+  --fg: var(--ink-10);
+  --fg-soft: var(--ink-40);
+  --fg-faint: var(--ink-60);
+
+  /* Deep space ground */
+  --void: #05070f;
+  --deep: #080d1c;
+
+  /* Accent: Sky blue, electric blue, and emerald */
+  --accent: #8fcaff;
+  --accent-deep: #3b86ff;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+
+  /* Hairlines */
+  --line: rgba(255, 255, 255, 0.10);
+  --line-strong: rgba(255, 255, 255, 0.18);
+
+  /* Typography: Editorial pairing */
+  --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+
+  /* Modular typography scale */
+  --t-hero: clamp(3.2rem, 9.5vw, 7.8rem);
+  --t-h2: clamp(2.3rem, 5.5vw, 4.4rem);
+  --t-h3: clamp(1.2rem, 2.2vw, 1.7rem);
+  --t-body: clamp(0.92rem, 1.05vw, 1.02rem);
+  --t-small: 0.82rem;
+  --t-label: 0.68rem;
+  --t-micro: 0.58rem;
+
+  --track-label: 0.24em;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  overflow-x: clip;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--fg);
+  background: var(--void);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+::selection {
+  background: var(--accent-deep);
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   STARFIELD CANVAS & VIGNETTE
+   -------------------------------------------------------------------------- */
+#sky-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  display: block;
+  pointer-events: none;
+}
+
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(130% 90% at 50% 50%, transparent 34%, rgba(0, 0, 0, 0.65) 100%);
+}
+
+/* --------------------------------------------------------------------------
+   TOP SCROLL RAIL (2px hairline progress indicator)
+   -------------------------------------------------------------------------- */
+.scroll-rail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.scroll-rail i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent), #ffffff);
+  box-shadow: 0 0 10px rgba(143, 202, 255, 0.8);
+  transition: width 0.08s ease-out;
+}
+
+/* --------------------------------------------------------------------------
+   TARGETING RETICLE & DOT CURSOR
+   -------------------------------------------------------------------------- */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10001;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(143, 202, 255, 1);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.reticle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.reticle i {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 0 8px rgba(143, 202, 255, 0.85);
+  transition: border-color 0.25s;
+}
+
+.reticle i:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.reticle i:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.reticle i:nth-child(3) { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+.reticle i:nth-child(4) { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+
+.reticle.locked i {
+  border-color: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+}
+
+.cursor-on .cursor-dot,
+.cursor-on .reticle {
+  opacity: 1;
+}
+
+.cursor-on,
+.cursor-on a,
+.cursor-on button {
+  cursor: none;
+}
+
+@media (pointer: coarse) {
+  .cursor-dot,
+  .reticle {
+    display: none !important;
+  }
+  .cursor-on,
+  .cursor-on a,
+  .cursor-on button {
+    cursor: auto !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   SECTION FURNITURE & EDITORIAL SCALE
+   -------------------------------------------------------------------------- */
+.section {
+  position: relative;
+  padding: clamp(4.5rem, 9vh, 7.5rem) clamp(1.4rem, 5vw, 4rem);
+  max-width: 1220px;
+  margin: 0 auto;
+}
+
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--t-h2);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  color: var(--ink-00);
+  margin-bottom: 2.8rem;
+}
+
+.section-title em {
+  font-style: italic;
+  color: var(--ink-40);
+  font-family: var(--font-display);
+}
